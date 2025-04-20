@@ -37,7 +37,6 @@ def add():
                 max_id = num_val
         new_id = f"id_{max_id + 1}"
 
-
         blog_posts[new_id] = {
             "author": author,
             "title": title,
@@ -51,16 +50,14 @@ def add():
 
 @app.route("/delete/<post_id>", methods=["GET", "POST"])
 def delete(post_id):
-    with open("data.json", "r") as file:
-        posts = json.load(file)
+    posts = load_data()
 
-        if post_id in posts:
-            del posts[post_id]
+    if post_id in posts:
+        del posts[post_id]
 
-            with open("data.json", "w") as file1:
-                json.dump(posts, file1, indent=4)
+        save_data(posts)
 
-        return redirect(url_for("index"))
+    return redirect(url_for("index"))
 
 
 @app.route("/update/<post_id>", methods=["GET", "POST"])

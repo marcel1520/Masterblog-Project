@@ -9,9 +9,9 @@
         "title": "My new Post",
         "content": "filled with information"
     },
-    "id_4": {
-        "author": "Karen Doe",
-        "title": "Here is that Post",
-        "content": "the Post you have waited for"
+    "id_5": {
+        "author": "Chuck Doe",
+        "title": "Testing implementation",
+        "content": "actually using helper function save"
     }
 }
