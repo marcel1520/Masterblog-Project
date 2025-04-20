@@ -1,0 +1,17 @@
+{
+    "id_1": {
+        "author": "John Doe",
+        "title": "Important Post",
+        "content": "This post is the first"
+    },
+    "id_3": {
+        "author": "Indira Doe ",
+        "title": "My new Post",
+        "content": "filled with information"
+    },
+    "id_4": {
+        "author": "Karen Doe",
+        "title": "Here is that Post",
+        "content": "the Post you have waited for"
+    }
+}

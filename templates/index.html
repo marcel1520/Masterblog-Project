@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Flask Blog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Welcome to My Flask Blog!</h1>
+    <div class="container">
+        {% for id, post in posts.items() %}
+        <div class="post-wrapper">
+            <div class="post">
+                <p><strong>Post ID: {{ id[-1] }}</strong></p>
+                <h2>{{ post["title"] }}</h2>
+                <p><em>by: <strong>{{ post["author"] }}</strong></em></p>
+                <p>{{ post["content"] }}</p>
+            </div>
+            <div class="button-column">
+                <form action="{{ url_for('delete', post_id=id) }}" method="POST">
+                    <input type="submit" value="Delete">
+                </form>
+                <form action="{{ url_for('update', post_id=id) }}" method="GET">
+                    <input type="submit" value="Update">
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="add">
+            <a href="/add">click here to add new post</a>
+        </div>
+    </div>
+
+</body>
+</html>
