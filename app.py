@@ -19,7 +19,35 @@ def save_data(posts):
 @app.route("/")
 def index():
         blog_posts = load_data()
-        return render_template("index.html", posts=blog_posts)
+
+        posts = []
+        for post_id, post in blog_posts.items():
+            post_with_id = post.copy()
+            post_with_id['id'] = post_id
+            posts.append(post_with_id)
+
+        search_query = request.args.get("search", "").lower()
+        sort_by = request.args.get("sort_by", "title")
+        order = request.args.get("order", "asc")
+
+        if search_query:
+            filtered_posts = []
+            for post in posts:
+                title = post['title'].lower()
+                author = post['author'].lower()
+                if search_query in title.lower() or search_query in author.lower():
+                    filtered_posts.append(post)
+            posts = filtered_posts
+
+        def get_sort_value(all_posts):
+            return all_posts[sort_by].lower()
+
+        reverse_order = order == "desc"
+        if sort_by in ['title', 'author', 'content']:
+            posts.sort(key=get_sort_value, reverse=reverse_order)
+
+
+        return render_template("index.html", posts=posts)
 
 
 @app.route("/add", methods=["GET", "POST"])

@@ -3,11 +3,24 @@ body {
     background-color: #F5F5F5;
     padding: 20px;
     color: #333;
+
 }
 
 h1 {
     text-align: center;
     color: #4F4F4F;
+}
+
+.sort-search-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.sort-search form{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 0.7rem;
 }
 
 .post {
@@ -32,6 +45,7 @@ h1 {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin: 10px 0 20px 0;
 }
 
 .add {
