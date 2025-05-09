@@ -6,52 +6,84 @@ app = Flask(__name__)
 
 # loading the data
 def load_data():
+    """
+        Load all blog posts from the data.json file.
+
+        Returns:
+            dict: A dictionary of blog posts where each key is a post ID.
+        """
     with open("data.json", "r") as data_file:
         return json.load(data_file)
 
 
 # saving the data
 def save_data(posts):
+    """
+        Save blog posts to the data.json file.
+
+        Args:
+            posts (dict): A dictionary of blog posts to be saved.
+        """
     with open("data.json", "w") as data_file:
         json.dump(posts, data_file, indent=4)
 
 
 @app.route("/")
 def index():
-        blog_posts = load_data()
+    """
+        Display all blog posts on the homepage with optional search and sort functionality.
 
-        posts = []
-        for post_id, post in blog_posts.items():
-            post_with_id = post.copy()
-            post_with_id['id'] = post_id
-            posts.append(post_with_id)
+        Query Parameters:
+            search (str): A keyword to filter posts by title or author.
+            sort_by (str): The field to sort posts by ('title', 'author', or 'content').
+            order (str): The sort order ('asc' for ascending, 'desc' for descending).
 
-        search_query = request.args.get("search", "").lower()
-        sort_by = request.args.get("sort_by", "title")
-        order = request.args.get("order", "asc")
+        Returns:
+            Rendered HTML page showing a list of blog posts.
+        """
+    blog_posts = load_data()
 
-        if search_query:
-            filtered_posts = []
-            for post in posts:
-                title = post['title'].lower()
-                author = post['author'].lower()
-                if search_query in title.lower() or search_query in author.lower():
-                    filtered_posts.append(post)
-            posts = filtered_posts
+    posts = []
+    for post_id, post in blog_posts.items():
+        post_with_id = post.copy()
+        post_with_id['id'] = post_id
+        posts.append(post_with_id)
 
-        def get_sort_value(all_posts):
-            return all_posts[sort_by].lower()
+    search_query = request.args.get("search", "").lower()
+    sort_by = request.args.get("sort_by", "title")
+    order = request.args.get("order", "asc")
 
-        reverse_order = order == "desc"
-        if sort_by in ['title', 'author', 'content']:
-            posts.sort(key=get_sort_value, reverse=reverse_order)
+    if search_query:
+        filtered_posts = []
+        for post in posts:
+            title = post['title'].lower()
+            author = post['author'].lower()
+            if search_query in title.lower() or search_query in author.lower():
+                filtered_posts.append(post)
+        posts = filtered_posts
+
+    def get_sort_value(all_posts):
+        return all_posts[sort_by].lower()
+
+    reverse_order = order == "desc"
+    if sort_by in ['title', 'author', 'content']:
+        posts.sort(key=get_sort_value, reverse=reverse_order)
 
 
-        return render_template("index.html", posts=posts)
+    return render_template("index.html", posts=posts)
 
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
+    """
+        Handle the creation of a new blog post.
+
+        GET: Show a form to create a new post.
+        POST: Save the new post and redirect to the homepage.
+
+        Returns:
+            Rendered HTML page or redirect response.
+        """
     if request.method == "POST":
         author = request.form["author"]
         title = request.form["title"]
@@ -78,6 +110,15 @@ def add():
 
 @app.route("/delete/<post_id>", methods=["GET", "POST"])
 def delete(post_id):
+    """
+        Delete a blog post by its ID.
+
+        Args:
+            post_id (str): The ID of the post to delete.
+
+        Returns:
+            Redirect to the homepage after deletion.
+        """
     posts = load_data()
 
     if post_id in posts:
@@ -90,6 +131,18 @@ def delete(post_id):
 
 @app.route("/update/<post_id>", methods=["GET", "POST"])
 def update(post_id):
+    """
+        Update an existing blog post by its ID.
+
+        GET: Show a form to edit the post.
+        POST: Save the updated post and redirect to the homepage.
+
+        Args:
+            post_id (str): The ID of the post to update.
+
+        Returns:
+            Rendered HTML page or redirect response.
+        """
 
     all_posts = load_data()
 
